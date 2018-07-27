@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Arch Linux Infrastructure overview</title>
+    <meta charset="utf-8">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+  </head>
+  <body>
+    <textarea id="source">
+
+# Arch Linux Infrastructure overview
+
+How Arch keep's rolling
+
+#### Jelle van der Waa [&lt;jelle@archlinux.org&gt;](mailto:jelle@archlinux.org)
+
+---
+
+# Overview
+
+1. About me
+2. Infrastructure overview
+3. Management
+
+---
+
+# $ whoami
+
+* Joined Arch Linux in 2010
+* Developer @ Arch Linux (since 2017)
+* Involved in the security/devops team
+
+---
+
+# Managment
+
+* Ansible is used to manage most of the servers
+* Managed by a small devops team
+
+Mailing list
+https://lists.archlinux.org/listinfo/arch-devops
+
+Ansible code
+https://git.archlinux.org/infrastructure.git/
+
+---
+
+# Server overview
+
+* Six hetzner boxes (~ 8 core, 32-64 GB ram)
+* One donated dedicated server
+* Eight servers donated by PIA
+
+---
+
+# Services overview
+
+
+---
+
+# Archweb
+
+* Provides the main website
+* Build using Django (Python framework)
+* Provides several services
+* To do lists for rebuilds
+* Developer dashboard
+
+---
+
+# Archweb mirror monitoring 
+
+* Periodically fetches lastsync to determine mirrors status
+* Pings mirrors from several locations
+
+https://www.archlinux.org/mirrors/kernel.org/212/
+
+---
+
+# Archweb package updates
+
+* A django managment command imports packages into the website
+* Shows the RSS feed
+* Used for Developer dashboard
+* Todo lists
+* Imports PGP keys for displaying on the website
+
+---
+
+# Build server
+
+* 8 core, 64 GB dedicated server
+* Provides a buildserver for Developer/Trusted Users
+* Ability to provide hosting for public_html for Dev's/TU's
+* Second buildserver located in Sinagpore
+
+---
+
+# AUR
+
+* The Arch User Repository
+* Written in PHP/Python
+* Hosted on one dedicated server
+
+???
+
+cgit / performance issues
+
+---
+
+# DBscripts
+
+* Repository managament
+* Handles addition/removal/moving of packages to the repository
+
+---
+
+# Monitoring
+
+* Zabbix
+* Grafana dasbhoard
+* systemd monitoring thing FIXME
+
+# Extra mirrors
+
+Provides mirrors underrepresented countries hosted on the PIA boxes
+
+---
+
+# Questions
+
+---
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      const slideshow = remark.create();
+    </script>
+  </body>
+</html>
