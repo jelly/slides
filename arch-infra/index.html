@@ -20,7 +20,9 @@ How Arch keep's rolling
 
 1. About me
 2. Infrastructure overview
-3. Management
+3. Monitoring
+4. Management
+5. Questions
 
 ---
 
@@ -29,19 +31,6 @@ How Arch keep's rolling
 * Joined Arch Linux in 2010
 * Developer @ Arch Linux (since 2017)
 * Involved in the security/devops team
-
----
-
-# Managment
-
-* Ansible is used to manage most of the servers
-* Managed by a small devops team
-
-Mailing list
-https://lists.archlinux.org/listinfo/arch-devops
-
-Ansible code
-https://git.archlinux.org/infrastructure.git/
 
 ---
 
@@ -55,16 +44,15 @@ https://git.archlinux.org/infrastructure.git/
 
 # Services overview
 
-
 ---
 
 # Archweb
 
 * Provides the main website
 * Build using Django (Python framework)
-* Provides several services
 * To do lists for rebuilds
 * Developer dashboard
+* Provides several services
 
 ---
 
@@ -80,9 +68,9 @@ https://www.archlinux.org/mirrors/kernel.org/212/
 # Archweb package updates
 
 * A django managment command imports packages into the website
-* Shows the RSS feed
+* Feeds the RSS feed
 * Used for Developer dashboard
-* Todo lists
+* Todo lists (updated version in [staging])
 * Imports PGP keys for displaying on the website
 
 ---
@@ -96,6 +84,16 @@ https://www.archlinux.org/mirrors/kernel.org/212/
 
 ---
 
+# Build server - User services
+
+* mkpkg - build git packages nightly
+* public_html on our build server
+* sogrep
+* quassel
+* matrix
+
+---
+
 # AUR
 
 * The Arch User Repository
@@ -104,7 +102,8 @@ https://www.archlinux.org/mirrors/kernel.org/212/
 
 ???
 
-cgit / performance issues
+- cgit / performance issues
+- small mysql db still! 300 MB
 
 ---
 
@@ -115,9 +114,36 @@ cgit / performance issues
 
 ---
 
+# Wiki
+
+* Mediawiki
+* Private fork with some theming/branding
+* 18.833 pages
+* 30.000 users
+* Biggest Database (7GB)
+
+---
+
+# BBS (FluxBB)
+
+* Forum
+* 88.300 registered users
+* 1.700.000 posts
+* ~ 5 GB DB
+
+---
+
+# Bugtracker (flyspray)
+
+* Currently using flyspray
+* Want to migrate to bugzilla
+
+---
+
 # Backups
 
-borg is used for backups
+* Borg is used for backups
+* ~3 TB disk
 
 ---
 
@@ -142,6 +168,18 @@ https://github.com/archlinux/archwiki
 
 ---
 
+# Security tracker
+
+* Python-flask miminal webservice
+* Tracks CVE's, Generates Advisory's
+* JSON API for advisories, see arch-audit
+
+???
+
+Mention that we need people in our security tracking team.
+
+---
+
 # Archive
 
 https://archive.archlinux.org
@@ -150,13 +188,112 @@ https://archive.archlinux.org
 * Used for reproducible builds and downgrades
 * Tooling https://github.com/archlinux/archivetools
 
+???
+
+Used to grow endlessly, had to write a custom script to remove unreferenced files
+for reproducible builds. Partly uploaded to archive.org
+
+---
+
+# Arch Vagrant
+
+* Automated building of VBox images for vagrant
+
+# Mailman
+
+* self hosted mailman hosted for all our mailing lists
+
+---
+
+# Git repo
+
+* Git repo for various projects
+
+---
+
+# Misc
+
+* Staging ground for archweb
+* Patchwork instance
+* Kanboard
+* Torrent tracker
+* Phrik
+
 ---
 
 # Monitoring
 
 * Zabbix
 * Grafana dasbhoard
-* systemd monitoring thing FIXME
+
+???
+
+Demo dashboard
+
+# Monitoring - Services
+
+* custom scripts for monitoring systemd units
+* monitor cpu/memory usage per service
+* monitor failed units
+
+???
+
+Both are handled by a Python script with the dbus module to talk
+to systemd.
+
+---
+
+# Monitoring - Rest
+
+* Perl scripts for monitoring
+* Borg monitoring
+* MySQL user/db status
+* Arch Audit for security issues
+
+???
+
+We've written custom tooling to monitor various things of interest.
+
+
+---
+
+# Monitoring - Results!
+
+* Heavy MySQL usage for the AUR
+* Quicker security patching
+* Service monitoring spotted issue in cgit
+
+???
+
+Heavy MySQL stats ~ 300% CPU, resolved by nginx caching.
+Heavy CPU usage for cgit, due to not git gc'ing.
+
+---
+
+# Managment
+
+* Ansible is used to manage most of the servers
+* Managed by a small devops team (8 persons)
+
+Mailing list
+https://lists.archlinux.org/listinfo/arch-devops
+
+Ansible code
+https://git.archlinux.org/infrastructure.git/
+
+# Ansible role
+
+* pacman is supported!
+* basic role to deploy our basic server
+* deploys ssh/tools/users/pubkeys
+
+---
+
+# Future
+
+* Ansible more Arch!
+* LDAP
+* Bugzilla
 
 ---
 
