@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Arch Linux Reproducible Builds</title>
+    <meta charset="utf-8">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+  </head>
+  <body>
+    <textarea id="source">
+
+# Arch Linux Reproducible Builds
+
+Are we reproducible yet?!
+
+#### Jelle van der Waa [&lt;jelle@archlinux.org&gt;](mailto:jelle@archlinux.org)
+
+---
+
+# Overview
+
+1. About me
+2. Reproducible builds
+3. Arch Reproducible
+4. Questions
+
+---
+
+# $ whoami
+
+* Joined Arch Linux in 2010
+* Developer @ Arch Linux (since 2017)
+* Involved in the security/devops team
+
+---
+
+# Reproducible Builds
+
+“reproducible” builds enable anyone to reproduce the exact same binary packages from a given source
+
+---
+
+# Why
+
+* Verify packages can be build
+* Verification of build packages
+
+---
+
+# Benefits
+
+* Repo packages can be verified by users
+* (secure) automation
+* Deterministic builds
+
+---
+
+# Issues
+
+* Timestamps
+* private keys!
+* timezones
+* hashes
+
+---
+
+# Arch Reproducible
+
+* Reproducing packages continuously
+* Multiple variations
+
+https://tests.reproducible-builds.org/archlinux/archlinux.html
+
+---
+
+# Pacman changes
+
+* BUILDINFO support
+* SOURCE_DATE_EPOCH support
+* Removing timestamp from PKGINFO/MTREE
+
+---
+
+# BUILDINFO
+
+Describes the build env where a package was build
+
+```bash
+$ tar xvf glibc-2.28-4-x86_64.pkg.tar.xz .BUILDINFO
+$ cat .BUILDINFO
+format = 1
+pkgname = glibc
+pkgbase = glibc
+pkgver = 2.28-4
+pkgarch = x86_64
+pkgbuild_sha256sum = af410234b2184...
+...
+installed = acl-2.2.53-1-x86_64
+installed = archlinux-keyring-20180808-1-any
+```
+
+```bash
+man BUILDINFO
+```
+
+???
+
+Using the Arch Linux Archive and .BUILDINFO , a special script
+can re-create 
+
+---
+
+# Goal
+
+* User verifiable builds
+* Arch official rebuild infra
+
+---
+
+# Work In Progress
+
+* Devtools-repro
+
+https://github.com/Foxboron/devtools-repro
+
+---
+
+# Help out
+
+* #reproducible-builds
+* #archlinux-reproducible
+* work on repro issues
+
+---
+
+# Questions
+
+---
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      const slideshow = remark.create();
+    </script>
+  </body>
+</html>
