@@ -41,15 +41,14 @@ Are we reproducible yet?!
 
 # Why
 
-* Verify packages can be build
-* Verification of build packages
+* Verification of repository packages
 
 ---
 
 # Benefits
 
 * Repo packages can be verified by users
-* (secure) automation
+* (Secure) automation
 * Deterministic builds
 
 ---
@@ -60,6 +59,35 @@ Are we reproducible yet?!
 * private keys!
 * timezones
 * hashes
+
+---
+
+# Diffoscope
+
+Awesome tool to diff arbitrary files
+
+* Supports tons of file formats
+* pacman -S diffoscope
+
+---
+
+# Diffoscope example
+
+```bash
+$ diffoscope awesome-4.2-1-x86_64.pkg.tar.xz /tmp/awesome-4.2-1-x86_64.pkg.tar.xz 
+
+│ │      <h3>See also:</h3>
+│ │      <ul>
+│ │ -         <li><a href="../classes/tag.html#beautiful.master_width_factor">master_width_factor</a></li>
+│ │ -         <li><a href="../classes/tag.html#tag.master_fill_policy">master_fill_policy</a></li>
+│ │ +         <li><a href="../classes/tag.html#tag.master_width_factor">master_width_factor</a></li>
+│ │ +         <li><a href="../classes/tag.html#beautiful.master_fill_policy">master_fill_policy</a></li>
+│ │      </ul>
+```
+
+
+
+https://tests.reproducible-builds.org/archlinux/community/awesome/awesome-4.2-1-x86_64.pkg.tar.xz.html
 
 ---
 
@@ -126,8 +154,8 @@ https://github.com/Foxboron/devtools-repro
 
 # Help out
 
-* #reproducible-builds
-* #archlinux-reproducible
+* \#reproducible-builds
+* \#archlinux-reproducible
 * work on repro issues
 
 ---
