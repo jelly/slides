@@ -59,6 +59,7 @@ Are we reproducible yet?!
 * private keys!
 * timezones
 * hashes
+* python2
 
 ---
 
@@ -147,8 +148,51 @@ can re-create
 # Work In Progress
 
 * Devtools-repro
+* Tool to reproduce/check repo packages
+* still unofficial
 
 https://github.com/Foxboron/devtools-repro
+
+---
+
+# Repro build
+
+* Build a package twice for reproducibility
+
+```bash
+$ repro build
+==> Using SOURCE_DATE_EPOCH: 1535055076
+==> Starting build1...
+...
+==> Starting build2...
+  -> Create snapshot for build2...
+==> Settings build environemnt...
+export TZ=/usr/share/zoneinfo/Etc/GMT-14
+export LANG=fr_CH.UTF-8
+==> Comparing hashes...
+  -> acl-2.2.53-1-x86_64.pkg.tar.xz from build2 is reproducible with profile1.conf!
+==> Package is reproducible!
+```
+
+---
+
+# Repro check
+
+* Verify a repo package
+
+```bash
+repro check filesystem-2018.8-1-x86_64.pkg.tar.xz
+==> Starting build...
+...
+  -> Preparing packages
+Downloading acl-2.2.53-1-x86_64.pkg.tar.xz
+Downloading archlinux-keyring-20180808-1-any.pkg.tar.xz
+==> Package is not reproducible!
+```
+
+???
+
+Overlaps with reprotest.
 
 ---
 
