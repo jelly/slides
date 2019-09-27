@@ -37,7 +37,6 @@ How Arch keep's rolling
 # Server overview
 
 * Six hetzner boxes (~ 8 core, 32-64 GB ram)
-* One donated dedicated server
 * Eight servers donated by PIA
 
 ---
@@ -52,7 +51,7 @@ How Arch keep's rolling
 * Build using Django (Python framework)
 * To do lists for rebuilds
 * Developer dashboard
-* Provides several services
+* Provides several services (mirrors, etc.)
 
 
 ---
@@ -98,20 +97,18 @@ https://www.archlinux.org/mirrors/kernel.org/212/
 
 # Build server
 
-* 8 core, 64 GB dedicated server
+* 24 core, 128 GB dedicated server
 * Provides a buildserver for Developer/Trusted Users
 * Ability to provide hosting for public_html for Dev's/TU's
-* Second buildserver located in Sinagpore
+* Second buildserver located in Sinagpore (sgp.mirror.pkgbuild.com)
 
 ---
 
-# Build server - User services
+# Communcation
 
-* mkpkg - build git packages nightly
-* public_html on our build server
-* sogrep
-* quassel
-* matrix
+* mail (mail.archlinux.org)
+* quassel (quassel.archlinux.org)
+* matrix (matrix.archlinux.org)
 
 ---
 
@@ -119,7 +116,7 @@ https://www.archlinux.org/mirrors/kernel.org/212/
 
 * The Arch User Repository
 * Written in PHP/Python
-* Hosted on one dedicated server
+* Hosted on one dedicated server (luna)
 
 ???
 
@@ -181,14 +178,6 @@ Provides mirrors underrepresented countries hosted on the PIA boxes
 
 ---
 
-# Arch Wiki
-
-* Mediawiki instance
-
-https://github.com/archlinux/archwiki
-
----
-
 # Security tracker
 
 * Python-flask miminal webservice
@@ -219,6 +208,8 @@ for reproducible builds. Partly uploaded to archive.org
 # Arch Vagrant
 
 * Automated building of VBox images for vagrant
+
+---
 
 # Mailman
 
@@ -291,7 +282,7 @@ Heavy CPU usage for cgit, due to not git gc'ing.
 
 ---
 
-# Managment
+# Management
 
 * Ansible is used to manage most of the servers
 * Managed by a small devops team (8 persons)
@@ -301,6 +292,8 @@ https://lists.archlinux.org/listinfo/arch-devops
 
 Ansible code
 https://git.archlinux.org/infrastructure.git/
+
+---
 
 # Ansible role
 
@@ -315,19 +308,18 @@ https://git.archlinux.org/infrastructure.git/
 * Ansible more Arch!
 * LDAP
 * Bugzilla
+* Migrating from Luna
 
 ---
 
 # Help out
 
-* join irc
-* sources online
+* join #archlinux-devops
+* contribute ansible roles
 
 ---
 
 # Questions
-
----
 
     </textarea>
     <script src="js/remark-latest.min.js">
