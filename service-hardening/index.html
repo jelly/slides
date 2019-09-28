@@ -20,7 +20,11 @@ Improving service security
 
 1. About me
 2. Systemd Services
-4. Questions
+3. Limit privileges
+4. Filesystem Access
+5. System Calls
+6. Network hardening
+7. Questions
 
 ---
 
@@ -33,23 +37,126 @@ Improving service security
 # Agenda
 
 * Systemd Service
-* Privileges
-* File Access
-* System Calls
-* Network hardening
 
 ---
 
 # Why
 
 * Default systemd service are not restricted
+* No isolation between services 
 
 ---
 
 # Benefits
 
-* 
+* Isolate processes
+* Reduce impact of security issues
 
+???
+
+Uses seccomp for syscall/capability filtering
+
+---
+
+# Basic service
+
+```bash
+[Unit]
+Description=Quassel IRC Service
+After=postgresql.service
+
+[Service]
+ExecStart=/usr/bin/quasselcore
+
+[Install]
+WantedBy=default.target
+``` 
+
+---
+
+# Limit Privileges
+
+```bash
+[Service]
+User=quassel
+
+DynamicUser=true
+
+NoNewPrivileges=
+```
+
+???
+
+DynamicUser is useful for services which creates no files on disk and can be
+used in combination with EnvironmentFile=/etc/service.cfg.
+
+prctl(PR_SET_NO_NEW_PRIVS, 1)
+promises not to grant privileges to do anything that could not have been done without the execve(2) call.
+
+---
+
+# Filesystem Access
+
+```bash
+[Service]
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+
+# Filtering
+ReadWritePaths=
+ReadOnlyPaths=
+InaccessiblePaths=
+```
+
+---
+
+# System calls
+
+```bash
+[Service]
+
+```
+
+---
+
+# Network hardening
+
+
+```bash
+[Service]
+PrivateNetwork=true
+```
+
+```bash
+[Service]
+IPAddressAllow=localhost
+IPAddressDeny=any
+```
+
+???
+
+Network restrictions use eBPF and requires underlying kernel support.
+
+---
+
+# Capabilities
+
+```bash
+CapabilityBoundingSet=
+```
+
+---
+
+# Various
+
+```bash
+MemoryDenyWriteExecute=true
+```
 ---
 
 # Questions
