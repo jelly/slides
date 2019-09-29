@@ -58,6 +58,25 @@ Uses seccomp for syscall/capability filtering
 
 ---
 
+# Linux features
+
+* cgroups
+* Namespaces
+* capabilities
+
+---
+
+# Considerations
+
+* threat analysis
+* not a magic bullet
+
+???
+
+Does not prevent SQLi or Kernel bypass
+
+---
+
 # Basic service
 
 ```bash
@@ -115,11 +134,16 @@ InaccessiblePaths=
 
 ---
 
-# System calls
+# System Calls
 
 ```bash
 [Service]
+SystemCallFilter=~@reboot
+```
 
+```bash
+# List of system calls to filter on
+systemd-analyze syscall-filter
 ```
 
 ---
@@ -148,7 +172,13 @@ Network restrictions use eBPF and requires underlying kernel support.
 
 ```bash
 CapabilityBoundingSet=
+CapabilityBoundingSet=~CAP_KILL
 ```
+
+???
+
+Useful for root services to remove capabilities which are not required. Uses
+the capabilities API ofinux.
 
 ---
 
@@ -156,7 +186,26 @@ CapabilityBoundingSet=
 
 ```bash
 MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
 ```
+
+???
+
+UMask=
+
+---
+
+# Verify
+
+```bash
+$ systemd-analyze security
+
+  NAME                     DESCRIPTION                               
+✗ PrivateNetwork=          Service has access to the host's network  
+✗ User=/DynamicUser=       Service runs as root user                 
+✓ PrivateDevices=          Service has no access to hardware devices 
+```
+
 ---
 
 # Questions
