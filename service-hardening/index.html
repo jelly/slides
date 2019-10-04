@@ -19,12 +19,14 @@ Improving service security
 # Overview
 
 1. About me
-2. Systemd Services
-3. Limit privileges
-4. Filesystem Access
-5. System Calls
-6. Network hardening
-7. Questions
+2. Why, How
+3. Considerations
+4. Systemd Services
+5. Limit privileges
+6. Filesystem Access
+7. System Calls
+8. Network hardening
+9. Questions
 
 ---
 
@@ -34,46 +36,48 @@ Improving service security
 
 ---
 
-# Agenda
-
-* Systemd Service
-
----
-
 # Why
 
 * Default systemd service are not restricted
-* No isolation between services 
-
----
-
-# Benefits
-
-* Isolate processes
-* Reduce impact of security issues
+* No isolation between services
 
 ???
 
-Uses seccomp for syscall/capability filtering
+- Isolate processes
+- Reduce impact of security issues
 
 ---
 
-# Linux features
+# How
 
 * cgroups
 * Namespaces
 * capabilities
 
+???
+
+Uses seccomp for syscall/capability filtering
+Uses capabilities for removing or adding capabilities such as CAP_SETUID, .. CAP_SYS_BOOT, CAP_SYS_MODULE
+Uses mprotect - set memory mapping's PROT_READ, PROT_EXEC, PROT_WRITE
+
 ---
 
 # Considerations
 
-* threat analysis
 * not a magic bullet
+* application security > systemd service hardening
 
 ???
 
-Does not prevent SQLi or Kernel bypass
+Does not prevent SQLi, Kernel bypass, RCE or XSS, CRSF, broken auth flows
+
+STRIDE. STRIDE is an acronym consisting of the following six categories:
+- spoofing identity => no
+- tampering with data => reduced
+- repudiation
+- information disclosure => reduced
+- denial of service => maybe
+- elevation of privilege => reduced
 
 ---
 
