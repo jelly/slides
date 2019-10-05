@@ -37,7 +37,7 @@ How Arch keep's rolling
 # Server overview
 
 * Six hetzner boxes (~ 8 core, 32-64 GB ram)
-* Hetzner cloud VPS
+* Several Hetzner cloud VPS
 * Eight servers donated by PIA
 
 ---
@@ -118,6 +118,8 @@ https://www.archlinux.org/mirrors/kernel.org/212/
 * The Arch User Repository
 * Written in PHP/Python
 * Hosted on one dedicated server (luna)
+* Trusted user voting
+* Cgit for the repositories
 
 ???
 
@@ -162,6 +164,7 @@ https://www.archlinux.org/mirrors/kernel.org/212/
 # Backups
 
 * Borg is used for backups
+* One backup server (vostok)
 * ~3 TB disk
 
 ---
@@ -304,12 +307,37 @@ https://git.archlinux.org/infrastructure.git/
 
 ---
 
+# Terraform
+
+* Hetzner could VPS managed by terraform
+* Packager image
+
+---
+
+# Current Problems
+
+* User management
+* Security
+* Lack of overview
+* Old unmaintained stuff in operation (flyspray, bbs, planet, mailman 2)
+* Messy Ansible setup
+* Mix between VPS/dedicated machines
+* Unmanaged Luna server (cgit, AUR, BBS)
+* Hard to mirror Git repos to/from GitHub (harder for contribs)
+* No CI/CD (also for Ansible (AWX)?)
+* No automated compiling/packaging
+
+---
+
 # Future
 
-* Ansible more Arch!
-* LDAP
+* Terraform more
+* Ansible more
+* Automate more
+* IAM for users (one of Keycloak, FreeIPA, 389ds)
+* GitLab
 * Bugzilla
-* Migrating from Luna/Soyuz
+* More VPS: Migrating from Luna/Soyuz
 
 ---
 
