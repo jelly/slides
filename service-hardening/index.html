@@ -160,6 +160,12 @@ systemd-analyze syscall-filter
 PrivateNetwork=true
 ```
 
+CVE-2016-8655 and others
+```bash
+[Service]
+RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
+```
+
 ```bash
 [Service]
 IPAddressAllow=localhost
