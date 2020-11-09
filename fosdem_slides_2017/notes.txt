@@ -1,0 +1,41 @@
+Introduction
+
+Kopano is a communication & sharing platform which provides email, video, calendaring and file sharing.  Started out in 2016, as a fork of Zarafa, fully AGPLv3 licensed .
+
+Architecture (clients)
+Kopano provides it's own client, the WebApp, it has a plugin framework that allows you to extend it's functionality some plugins are already avaliable such as file sharing, s/mime, video confering. We also offer a native desktop client called the Deskapp with additional desktop integration.
+It is also possible to exchange your data via protocols such as IMAP, POP3 and CAldav. We also have an ActiveSync implementation which makes it possible to sync your email, calendar, task and notes to your mobile devices (for example Android, iOS)
+
+Architecture (backend)
+The clients can not function without a server, the kopano-server stores, and provides the data to the clients. The clients speak MAPI with the kopano-server and we use SOAP as transport mechanism. This means that we do not have an implementation of the OL wire protocol (DCE /RPC).
+The user data is all stored in a MySQL database as MAPI object; for IMAP, POP3 and mail integration we have to convert our data to EML (RFC822) and back.
+Attachments can be stored in the MySQL database as binary object or for better performance on disk or any S3 based protocol.
+
+Architecture (backend 2)
+As Kopano we want to provide an integrated solution which offers choice and flexibility, therefore you can use any MTA you prefer with Kopano and provide the user data from AD, LDAP or stored in the MySQL database. 
+The kopano-server is written to scale from small to large systems, with the possibility of HA multi-server. Since most of the components (search, gateway, delivery agent) are clients of the kopano-server they can be run on a different server.
+
+Z-Push
+Z-Push implements the ActiveSync protocol, it's written in PHP and it can be used to sync your mail, contacts, calendar and tasks to mobile devices.
+It has support for multiple backends and can be used separate from Kopano with for example Maildir, Vcard or IMAP.
+Outlook 2013 added support for ActiveSync which means it's possible to sync your data to OL, the implementation is however limited to your own data. If you want to for example open a shared folder you can use the Kopano Outlook Extension.
+
+~~~ Brug ~~~
+
+MAPI Overview (objects)
+I can't explain MAPI in this lightning talk and probably neither in a normal talk. In it's basics it's all about objects, the store is an MAPI Object with MAPI properties, which contains a MAPI object ( folder ),. etc. Each object has a few MAPI Properties set, a property contains a tag, type and value.
+The TAG contains the Type of a property... On the slides you can see an 'property tag being constructed' and how to set get a property.
+
+MAPI Good parts
+Kopano implements the MAPI specification which was used in Zarafa to make it possible to connect to Outlook buy using an Outlook plugin. The clients and server all use MAPI, and as every technology MAPI has it's benefits and downsides.
+MAPI was developed in the 1980's and is still developed, which shows it's a suitable format for groupware data. You could see a MAPI items as a key value store of properties which has an unique identifier, type and value with the flexibility of adding your own properties.
+It also provides a syncing framework (ICS Incremental Change Synchronization), which makes it possible to sync data from one point in time till the current point in time it is for example used in Z-Push.
+
+MAPI Bad parts
+MAPI also has it's downsides, it has a very high learning curve, it's low-level there is no abstraction layer which makes it easy to get things done. There is MSDN documentation, but it does not include a lot of of examples, and it's very brief. Since the standard is old, it has interesting features such as a limitation of 8Kb for the property value, if you want to use more then 8Kb you have to use a special operation. (There was also no space left for the addition of new properties, so microsoft added named properties).
+
+Python-kopano
+To make it easier to work with Kopano, we have been working on a high level programming API. Development on this API started when we where rewritten our search program and it's aim is to abstract MAPI, but it should still be possible to interact with MAPI. We already had python-mapi bindings, but these are low-level so Python-kopano was build on top of it.
+Python-kopano acts as MAPI Client, and we have build our search engine, backup solution and various debugging tools using this API.
+
+
