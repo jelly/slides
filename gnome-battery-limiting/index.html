@@ -206,22 +206,21 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
 
 ---
 
-# UPower
+# Implementation
 
 * Only supports start/stop thresholds for now
-
---
-
-# Future device support
-
-* Steam deck - not yet mainlined charge_control_end_threshold
-* Dell? - supports charge thresholds on some Latitudes in BIOS
-	- BIOS settings in /sys/class/firmware-attributes/*
-	- No charge\_control\_\*_threshold support
+* Writes configured state per battery to it's state dir
 
 ???
 
-* Should the kernel then also expose charge_control attributes and write BIOS settings?
+Some users fully charge and then set a stop threshold
+
+---
+
+# Status
+
+* UPower merge request under review
+* GNOME settings merge request under review
 
 ---
 
@@ -235,6 +234,19 @@ Something to think about, currently it's undocumented so I should probably send
 some documentation patches.
 
 Documentation/admin-guide/laptops/lg-laptop.rst
+
+---
+
+# Future device support
+
+* Steam deck - not yet mainlined charge_control_end_threshold
+* Dell? - supports charge thresholds on some Latitudes in BIOS
+	- BIOS settings in /sys/class/firmware-attributes/*
+	- No charge\_control\_\*_threshold support
+
+???
+
+* Should the kernel then also expose charge_control attributes and write BIOS settings?
 
 ---
 
@@ -263,14 +275,6 @@ Documentation/admin-guide/laptops/lg-laptop.rst
 * force-discarge on AC power
 * charge fully
 * should reset energy_full attribute
-
----
-
-# Closing
-
-* UPower merge request under review
-* GNOME settings merge request under review
-* Hopefully inspire more devices to support charge thresholds
 
 ---
 
