@@ -28,7 +28,7 @@
 }
 
 .remark-slide-container:nth-child(1n) .remark-slide-content {
-    background-image: url('../img/logo.svg');
+    /* background-image: url('../img/logo.svg'); */
     background-position: 99% 2%;
     background-size: 20%;
 }

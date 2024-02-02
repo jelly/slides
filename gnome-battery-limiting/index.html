@@ -97,10 +97,10 @@ echo 80 > /sys/class/power_supply/BAT0/charge_stop_threshold
 
 ---
 
-# Solution
+# Existing software
 
 * TLP - cli battery saving utility
-* Powerdevil - allows setting arbitrary limits
+* Powerdevil (KDE) - allows setting arbitrary limits
 * Other DE's - nothing so far
 * Windows - several vendor specific tools exist
 
@@ -124,26 +124,14 @@ echo 80 > /sys/class/power_supply/BAT0/charge_stop_threshold
 
 ---
 
-# UPower
-
-* GNOME uses UPower to make devices available on DBus
-* Exports devices from sysfs
-* Used to display battery information for mice/laptop/$bluetooth
-
-???
-
-* Cool what API should it expose?
-
----
-
 # GNOME Settings
 
 * User configurable thresholds?
 * Vendors?
 * Profiles?
-   - Travel
-   - Docked
-   - Power saving
+   - Travel - 0-100%
+   - Balanced - 70-80%
+   - Best for battery - 50-60%
 
 ---
 
@@ -151,15 +139,33 @@ echo 80 > /sys/class/power_supply/BAT0/charge_stop_threshold
 
 * Simple switch to enable charge limits
 * Multiple profiles confuse users
-* Configurable via hwdb
+
+<div align="center">
+	<img src="img/gnome-battery-design.png" />
+</div>
 
 ---
+
+# UPower
+
+* GNOME uses UPower to make devices available on DBus
+* Exports devices from sysfs
+* Used to display battery information for mice/laptop/$bluetooth
+* Keyboard backlight
+
+???
+
+* Cool what API should it expose?
+
+---
+
 
 # UPower API
 
 * Expose charge start/end threshold
 * Expose battery limit enabled/support
 * Method to enable/disable charge limiting
+* Configurable via hwdb
 * Set CHARGE_LIMIT property on UDEV battery object
 * Default 60-80%
 	- Allow overriding via hwdb on DMI/battery name for vendors/users
@@ -191,16 +197,59 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
 # Device support
 
 * Supports start/end threshold
-	- System76, MSI, Huawei, Thinkpad
+	- System76, MSI, Huawei, Lenovo (Thinkpad)
 * Only supports end threshold
 	- Toshiba, Asus, LG
 
 ---
 
-# Device support
+# Device support - LG
 
-* LG, Toshiba - 80, 100 end threshold supported
-* Asus - no support to read out written value from WMI
+* Supports 80% or 100%
+
+```c
+    if (value == 100 || value == 80) {
+        union acpi_object *r;
+```
+
+---
+
+# Device support - Toshiba
+
+* Accepts 0-100 as set values
+* Reports either 80% or 100%
+
+```c
+charge_control_end_threshold_store()
+
+if (value < 1 || value > 100)
+	return -EINVAL;
+rval = toshiba_battery_charge_mode_set(toshiba_acpi,
+	     			       (value < 90) ? 1 : 0);
+```
+
+```c
+charge_control_end_threshold_show()
+
+    if (state == 1)
+        return sprintf(buf, "80\n");
+    else
+        return sprintf(buf, "100\n");
+```
+
+---
+
+# Device support - Asus
+
+* Supports setting 0-100%
+* No support to read out configured state in driver
+* According to users, sets a hidden start threshold of end - 2
+
+---
+
+# Device support - conclusion
+
+* Different behaviour per device
 * No supported values exported in sysfs
 * All reverse engineered
 
@@ -232,6 +281,17 @@ Some users fully charge and then set a stop threshold
 # Future work - Kernel API
 
 * Expose supported charge thresholds in sysfs?
+* Can't break sysfs API
+
+```bash
+$ cat /sys/class/power_supply/BAT0/charge_behaviour
+[auto] inhibit-charge force-discharge
+```
+
+```bash
+$ cat /sys/class/power_supply/BAT0/charge_control_stop_threshold_supported
+60 80
+```
 
 ???
 
@@ -248,6 +308,7 @@ Documentation/admin-guide/laptops/lg-laptop.rst
 * Dell? - supports charge thresholds on some Latitudes in BIOS
 	- BIOS settings in /sys/class/firmware-attributes/*
 	- No charge\_control\_\*_threshold support
+* Microsoft Surface - BIOS setting, likely not accessible
 
 ???
 
@@ -258,7 +319,6 @@ Documentation/admin-guide/laptops/lg-laptop.rst
 # Future work - Framework
 
 * Support charge_control_stop_threshold
-* Support force discharge support
 * User utility exists to talk to the EC controller
 * Needs a kernel diver to do that
 * Ideal scenario, add firmware support to set charge_control_start_threshold
@@ -268,6 +328,7 @@ Documentation/admin-guide/laptops/lg-laptop.rst
 # Battery calibration support
 
 * Thinkpad's support setting the charge_behaviour in sysfs
+* Framework can likely support this
 * Calibration
 	- Disable charge thresholds
 	- Force discharge on AC power
@@ -277,7 +338,7 @@ Documentation/admin-guide/laptops/lg-laptop.rst
 ???
 
 * disable charge limits
-* force-discarge on AC power
+* force-discharge on AC power
 * charge fully
 * should reset energy_full attribute
 
@@ -287,7 +348,7 @@ Documentation/admin-guide/laptops/lg-laptop.rst
 
 * Allan Day (GNOME design)
 * Carlos (Glib/ GNOME settings)
-* Hans de Goede (UPower / Kernel side / Mentoring)
+* Hans de Goede (UPower / Kernel)
 * Martin Pitt (DBus API help)
 * Mark Pearson (Lenovo)
 
