@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Arch Linux images with mkosi</title>
+    <meta charset="utf-8">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+  </head>
+  <body>
+    <textarea id="source">
+count: false
+
+<!--
+ * Note use P and C for presentation mode and to duplicate the window and T to reset the timer
+ * https://docs.jonasundderwolf.de/tech-guides/remarkjs/working-with-remarkjs/
+*/
+-->
+
+# Arch Linux images with mkosi
+
+### Can Arch Linux switch to mkosi for all our image artifacts?
+
+#### Jelle van der Waa [&lt;jelle@archlinux.org&gt;](mailto:jelle@archlinux.org)
+
+---
+
+# $ whoami
+
+* Arch Linux Developer
+
+???
+
+* Started packaging, end up with too many hats
+
+---
+
+# Arch Linux
+
+* Rolling release distribution
+* Adopted systemd early on
+* Packaging uses sysusers/tmpfiles.d 
+
+???
+
+---
+
+# mkosi
+
+* Started by Lennart Poettering
+* Currently maintained by Daan de Meyer & Jörg Behrmann
+* Ini based configuration format
+* Rootless building of images (namespaces)
+
+---
+
+# Alternatives
+
+* osbuild
+* kiwi
+* both support Arch Linux
+
+---
+
+# Images
+
+* VM image (40Gb)
+* Cloud-init enabled image
+* Vagrant images (libvirt or virtualbox backend)
+* Archiso
+* Container (hosted on dockerhub & quay)
+
+???
+
+---
+
+# Current situation
+
+* Bash!
+* Update frequency?
+* 
+
+???
+
+---
+
+# Questions
+
+# 
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+        const slideshow = remark.create({
+            ratio: '16:9',
+            countIncrementalSlides: false,
+        });
+    </script>
+  </body>
+</html>
