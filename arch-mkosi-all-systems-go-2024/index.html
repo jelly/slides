@@ -82,6 +82,146 @@ count: false
 
 ---
 
+# Reproducible Builds
+
+A build is reproducible if given the same source code, build environment and build instructions, any party can recreate bit-by-bit identical copies of all specified artifacts.
+
+https://reproducible-builds.org
+
+---
+
+# Reproducible Arch Linux Packages
+
+* 90% Reproducible so far
+* Reproducible minimal container image
+
+https://reproducible.archlinux.org
+
+---
+
+# Reproducible issues
+
+* Timestamps
+* Hostname
+* Versioned identifiers, kernel etc.
+* Locale, sorting, build paths
+
+---
+
+# Reproducible images
+
+* Some prior work here done by [edgelesssys](https://github.com/edgelesssys/reproducible-mkosi)
+* SourceDateEpoch option
+* Seed=
+
+---
+
+# Reproducible images
+
+* Start analyzing images with diffoscope
+
+---
+
+# Reproducible images
+
+```bash
+diffoscope imageA.raw imageB.raw
+```
+
+---
+
+# Reproducible images
+
+```bash
+diffoscope imageA.raw imageB.raw
+```
+
+```
+[11111.1] Out of memory: Kill process 2603 (diffoscope) score 761 or sacrifice child
+```
+
+---
+
+# Reproducible images
+
+* Reduce the problem scope
+* Output the image to a directory
+* Diffoscope the directories
+
+---
+
+# Reproducible images
+
+```bash
+export SOURCE_DATE_EPOCH=1662046009
+mkosi -d arch -p systemd --format directory \
+      --source-date-epoch $SOURCE_DATE_EPOCH \
+      -o foo \
+      -m https://archive.archlinux.org/repos/2024/06/30/
+mkosi -d arch -p systemd --format directory \
+      --source-date-epoch $SOURCE_DATE_EPOCH \
+      -o bar \
+      -m https://archive.archlinux.org/repos/2024/06/30/
+sudo diffoscope foo bar --html-dir output
+xdg-open output/index.html
+```
+
+---
+
+# Reproducible images
+
+Two differences with a small image:
+
+* var/cache/ldconfig/aux-cache
+* var/lib/pacman/local
+
+```
+20	%INSTALLDATE%   20	%INSTALLDATE%
+21	1722251133      21	1722251028
+```
+
+---
+
+# Reproducible images
+
+lib/libalpm/add.c
+```c
+	/* make an install date (in UTC) */
+	newpkg->installdate = time(NULL);
+```
+
+Workaround
+```bash
+sed -i -e '/INSTALLDATE/{n;s/.*/0/}' \
+          "${BUILDROOT}"/var/lib/pacman/local/*/desc
+```
+
+---
+
+# Reproducible images
+
+Cloud image
+```bash
+mkosi -d arch -p systemd -p linux -p base -p grub \
+              -p openssh -p sudo -p reflector \
+	      -p btrfs-progs -p udev \
+	      --source-date-epoch 1662046009 \
+	      --format directory -o bar \
+	      -m https://archive.archlinux.org/repos/2024/06/30/
+```
+
+---
+
+# Reproducible images
+
+* UKI unreproducible - diffoscope can't unpack EFI binaries
+* Grub boot/EFI/Linux entry records timestamps
+* Grub efi/loader/random-seed unreproducible (duh!)
+
+---
+
+---
+
 # Questions
 
 # 
