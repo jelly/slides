@@ -74,9 +74,9 @@ count: false
 
 # Current situation
 
-* Bash!
-* Update frequency?
-* 
+* Self written Bash scripts
+* Releases every two weeks
+* Requires root privileges
 
 ???
 
@@ -90,29 +90,35 @@ https://reproducible-builds.org
 
 ---
 
+# Reproducibility issues
+
+* Timestamps (SOURCE_DATE_EPOCH)
+* Recorded hostname, version information, kernel used etc.
+* Locale / recorded build paths
+* Locale, sorting, build paths
+
+???
+
+---
+
 # Reproducible Arch Linux Packages
 
 * 90% Reproducible so far
+* Installed packages scriptlets should be reproducible
 * Reproducible minimal container image
 
 https://reproducible.archlinux.org
 
----
-
-# Reproducible issues
-
-* Timestamps
-* Hostname
-* Versioned identifiers, kernel etc.
-* Locale, sorting, build paths
+https://lists.reproducible-builds.org/pipermail/rb-general/2024-March/003301.html
 
 ---
+
 
 # Reproducible images
 
 * Some prior work here done by [edgelesssys](https://github.com/edgelesssys/reproducible-mkosi)
-* SourceDateEpoch option
-* Seed=
+* SourceDateEpoch option - clamp mtimes
+* Seed option - reproducible partition UUID's
 
 ---
 
@@ -172,7 +178,7 @@ xdg-open output/index.html
 
 Two differences with a small image:
 
-* var/cache/ldconfig/aux-cache
+* var/cache/ldconfig/aux-cache (glibc)
 * var/lib/pacman/local
 
 ```
@@ -201,9 +207,8 @@ https://gitlab.archlinux.org/pacman/pacman/-/merge_requests/213
 
 ---
 
-# Reproducible images
+# Reproducible cloud image
 
-Cloud image
 ```bash
 mkosi -d arch -p systemd -p linux -p base -p grub \
               -p openssh -p sudo -p reflector \
@@ -215,13 +220,46 @@ mkosi -d arch -p systemd -p linux -p base -p grub \
 
 ---
 
-# Reproducible images
+# Reproducible cloud image
 
 * UKI unreproducible - diffoscope can't unpack EFI binaries
 * Grub boot/EFI/Linux entry records timestamps
 * Grub efi/loader/random-seed unreproducible (duh!)
 
+???
+
+* UKI => leftover /var/cache/ldconfig/aux-cache
+* random-seed has been removed in mkosi (Thanks Daan)
+* ukify-inspect is a useful tool
+
 ---
+
+# Reproducible cloud image 
+
+* lol
+
+---
+
+# Reproducible image filesystems
+
+* Filesystems are created by systemd-repart
+* Some mkfs programs support creating a filesystem with files
+
+???
+
+Creating a filesystem directly with the files included can be done without mounting so unprivileged and possibly easier to make reproducible
+
+---
+
+# Reproducible image filesystems
+
+* vfat/ext4/f2fs/erofs can be made reproducible
+* btrfs needs work
+* xfs needs work
+
+---
+
+# Conclusion
 
 ---
 
