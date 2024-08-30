@@ -234,12 +234,6 @@ mkosi -d arch -p systemd -p linux -p base -p grub \
 
 ---
 
-# Reproducible cloud image 
-
-* lol
-
----
-
 # Reproducible image filesystems
 
 * Filesystems are created by systemd-repart
@@ -256,6 +250,21 @@ Creating a filesystem directly with the files included can be done without mount
 * vfat/ext4/f2fs/erofs can be made reproducible
 * btrfs needs work
 * xfs needs work
+
+---
+
+# Reproducible image filesystems
+
+* vfat - can be made reproducible requires an upstream patch
+* small fix in systemd-repart
+
+https://github.com/systemd/systemd/pull/34180
+
+---
+
+# Thanks
+
+* Daan
 
 ---
 
