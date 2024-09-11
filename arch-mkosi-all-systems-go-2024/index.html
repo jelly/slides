@@ -82,6 +82,21 @@ count: false
 
 ---
 
+# Porting to mkosi
+
+* Profiles
+   * vagrant
+   * images
+
+---
+
+# Challenges
+
+* btrfs swapfile support
+* `install --owner=vagrant` is unsupported, use systemd tmpfiles
+
+---
+
 # Reproducible Builds
 
 A build is reproducible if given the same source code, build environment and build instructions, any party can recreate bit-by-bit identical copies of all specified artifacts.
