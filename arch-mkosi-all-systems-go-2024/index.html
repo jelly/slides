@@ -92,8 +92,27 @@ count: false
 
 # Challenges
 
-* btrfs swapfile support
-* `install --owner=vagrant` is unsupported, use systemd tmpfiles
+* btrfs swapfile creation support
+* installing a user authorized_keys
+
+???
+
+* not possible to chown as user when not using root
+
+---
+
+# Output
+
+* mkosi only supports outputting a raw disk image
+* scripts are the solution to get the desired output for vagrant/cloud images
+
+---
+
+# CI
+
+* the mkosi project provides a GitHub action
+
+---
 
 ---
 
