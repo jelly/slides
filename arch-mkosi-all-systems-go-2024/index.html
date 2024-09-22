@@ -26,6 +26,7 @@ count: false
 # $ whoami
 
 * Arch Linux Developer
+* DevOps team member
 
 ???
 
@@ -37,6 +38,7 @@ count: false
 
 * Rolling release distribution
 * Adopted systemd early on
+* Pacman package manager
 * Packaging uses sysusers/tmpfiles.d 
 
 ???
@@ -77,6 +79,9 @@ count: false
 * Self written Bash scripts
 * Releases every two weeks
 * Requires root privileges
+* Build & tested in a GitLab custom libvirt runner
+
+https://gitlab.archlinux.org/archlinux/arch-boxes
 
 ???
 
@@ -84,9 +89,27 @@ count: false
 
 # Porting to mkosi
 
+* mkosi.conf - package definitions
+* mkosi.extra - custom files
+* mkosi.repart - custom partitioning
+
+???
+
+* Package definitions, required packages, can be overlayed in profiles
+* extra, default systemd
+
+---
+
+# Porting to mkosi
+
 * Profiles
    * vagrant
+   	* libvirt
+   	* virtualbox
    * images
+   	* basic
+   	* cloud-init
+
 
 ---
 
@@ -104,15 +127,30 @@ count: false
 # Output
 
 * mkosi only supports outputting a raw disk image
-* scripts are the solution to get the desired output for vagrant/cloud images
+* mkosi.postout scripts to get the desired output format image
 
 ---
 
-# CI
+# Output example Vagrant
 
-* the mkosi project provides a GitHub action
+mkosi.postout
+```bash
+#!/bin/bash
 
----
+IMAGE_NAME="Arch-Linux-x86_64-libvirt-latest.box"
+
+cp "${SRCDIR}/Vagrantfile.libvirt" "${OUTPUTDIR}/Vagrantfile"
+
+qemu-img convert -f raw "${OUTPUTDIR}/${IMAGE_ID}.raw" \
+         -O qcow2 "${OUTPUTDIR}/box.img"
+DISK_SIZE=$(qemu-img info --output=json "${OUTPUTDIR}/box.img" | \
+            jq '."virtual-size" / 1024 / 1024 / 1024 + 0.5 | round')
+
+echo '{"format":"qcow2","provider":"libvirt","virtual_size":'"${DISK_SIZE}"'}' \
+     > "${OUTPUTDIR}/metadata.json"
+tar -C "${OUTPUTDIR}" -czf "${OUTPUTDIR}/${IMAGE_NAME}" \
+       Vagrantfile metadata.json box.img
+```
 
 ---
 
@@ -121,17 +159,6 @@ count: false
 A build is reproducible if given the same source code, build environment and build instructions, any party can recreate bit-by-bit identical copies of all specified artifacts.
 
 https://reproducible-builds.org
-
----
-
-# Reproducibility issues
-
-* Timestamps (SOURCE_DATE_EPOCH)
-* Recorded hostname, version information, kernel used etc.
-* Locale / recorded build paths
-* Locale, sorting, build paths
-
-???
 
 ---
 
@@ -144,6 +171,16 @@ https://reproducible-builds.org
 https://reproducible.archlinux.org
 
 https://lists.reproducible-builds.org/pipermail/rb-general/2024-March/003301.html
+
+---
+
+# Reproducibility issues
+
+* Timestamps (SOURCE_DATE_EPOCH)
+* Recorded hostname, version information, kernel used etc.
+* Locale, sorting, build paths
+
+???
 
 ---
 
@@ -241,7 +278,7 @@ https://gitlab.archlinux.org/pacman/pacman/-/merge_requests/213
 
 ---
 
-# Reproducible cloud image
+# Reproducible bootable image
 
 ```bash
 mkosi -d arch -p systemd -p linux -p base -p grub \
@@ -254,16 +291,15 @@ mkosi -d arch -p systemd -p linux -p base -p grub \
 
 ---
 
-# Reproducible cloud image
+# Reproducible bootable image
 
 * UKI unreproducible - diffoscope can't unpack EFI binaries
-* Grub boot/EFI/Linux entry records timestamps
 * Grub efi/loader/random-seed unreproducible (duh!)
 
 ???
 
 * UKI => leftover /var/cache/ldconfig/aux-cache
-* random-seed has been removed in mkosi (Thanks Daan)
+* random-seed has been removed in mkosi
 * ukify-inspect is a useful tool
 
 ---
@@ -284,19 +320,48 @@ Creating a filesystem directly with the files included can be done without mount
 * vfat/ext4/f2fs/erofs can be made reproducible
 * btrfs needs work
 * xfs needs work
+* dosfstools requires an upstream patch
+
+https://salsa.debian.org/reproducible-builds/reproducible-website/-/merge_requests/156
 
 ---
 
-# Reproducible image filesystems
+#  Reproducible image filesystems
 
-* vfat - can be made reproducible requires an upstream patch
-* small fix in systemd-repart
+* Non-reproducible boot partition
+* Grub boot/EFI/Linux entry records timestamps
 
 https://github.com/systemd/systemd/pull/34180
 
 ---
 
+#  Reproducible images
+
+* Build a reproducible image locally
+* Build on GitHub CI irreproducible
+
+---
+
+# CI
+
+* mkosi project provides a GitHub action
+* GitLab CI by default uses a container
+* Latest mkosi (main) does not build in a privileged container
+* Arch boxes project uses a custom libvirt runner
+
+---
+
 # Conclusion
+
+* mkosi is easy to get in
+* more work needed before considering a switch
+* more reproducible images
+
+---
+
+# Links
+
+https://github.com/jelly/arch-mkosi-boxes/
 
 ---
 
