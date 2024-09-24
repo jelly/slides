@@ -378,8 +378,15 @@ https://github.com/systemd/systemd/pull/34180
 
 #  Reproducible images
 
-* Build a reproducible image locally
 * Build on GitHub CI irreproducible
+* Build a reproducible image locally
+* Build on Arch server / Laptop reproducbible (xfs/btrfs)
+
+<img style="float: left; padding-left: 10px;" src="reproducible-image.png">
+
+???
+
+The Arch container uid/gids for /srv/ftp are different from a normal install. This somehow leaks into the image
 
 ---
 
