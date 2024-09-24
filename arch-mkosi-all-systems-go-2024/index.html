@@ -17,7 +17,7 @@ count: false
 
 # Arch Linux images with mkosi
 
-### Can Arch Linux switch to mkosi for all our image artifacts?
+### Should Arch Linux move to mkosi for all our image artifacts?
 
 #### Jelle van der Waa [&lt;jelle@archlinux.org&gt;](mailto:jelle@archlinux.org)
 
@@ -28,15 +28,17 @@ count: false
 * $ whoami / definitions
 * porting to mkosi
 * reproducible images
-* ci
+* continuous integration
 * conclusion
 
 ---
 
 # $ whoami
 
-* Arch Linux Developer
-* DevOps team member
+* Arch Linux Developer since 2014
+* DevOps team member since 2018
+* Software Engineer @ Red Hat
+* Interested in Reproducible Builds & Packaging
 
 ???
 
@@ -47,9 +49,9 @@ count: false
 # Arch Linux
 
 * Rolling release distribution
-* Adopted systemd early on
 * Pacman package manager
 * Packaging uses sysusers/tmpfiles.d 
+* Adopted systemd early on
 
 ???
 
@@ -59,7 +61,7 @@ count: false
 
 * Started by Lennart Poettering
 * Currently maintained by Daan de Meyer & Jörg Behrmann
-* Ini based configuration format
+* `.ini` based configuration format
 * Rootless building of images (namespaces)
 
 ---
@@ -76,9 +78,13 @@ count: false
 
 * VM image (40Gb)
 * Cloud-init enabled image
-* Vagrant images (libvirt or virtualbox backend)
+* Vagrant images 
+	* libvirt
+	* virtualbox backend
 * Archiso
-* Container (hosted on dockerhub & quay)
+* iPXE
+* Container image
+	* hosted on dockerhub & quay
 
 ???
 
@@ -166,7 +172,7 @@ tar -C "${OUTPUTDIR}" -czf "${OUTPUTDIR}/${IMAGE_NAME}" \
 
 # Reproducible Builds
 
-A build is reproducible if given the same source code, build environment and build instructions, any party can recreate bit-by-bit identical copies of all specified artifacts.
+> “A build is reproducible if given the same source code, build environment and build instructions, any party can recreate bit-by-bit identical copies of all specified artifacts.”
 
 https://reproducible-builds.org
 
@@ -174,8 +180,8 @@ https://reproducible-builds.org
 
 # Reproducible Arch Linux Packages
 
+* Started in 2019
 * 90% Reproducible so far
-* Installed packages scriptlets should be reproducible
 * Reproducible minimal container image
 
 https://reproducible.archlinux.org
@@ -257,7 +263,7 @@ xdg-open output/index.html
 
 # Reproducible images
 
-Two differences with a small image:
+Two differences with a systemd package:
 
 * var/cache/ldconfig/aux-cache (glibc)
 * var/lib/pacman/local
@@ -303,8 +309,10 @@ mkosi -d arch -p systemd -p linux -p base -p grub \
 
 # Reproducible bootable image
 
-* UKI unreproducible - diffoscope can't unpack EFI binaries
-* Grub efi/loader/random-seed unreproducible (duh!)
+* UKI unreproducible
+	* diffoscope can't unpack EFI binaries
+* systemd-boot
+	* efi/loader/random-seed unreproducible (duh!)
 
 ???
 
@@ -314,7 +322,7 @@ mkosi -d arch -p systemd -p linux -p base -p grub \
 
 ---
 
-# Reproducible image filesystems
+# Reproducible filesystems
 
 * Filesystems are created by systemd-repart
 * Some mkfs programs support creating a filesystem with files
@@ -323,8 +331,7 @@ mkosi -d arch -p systemd -p linux -p base -p grub \
 mkfs.btrfs --rootdir image-contents test.img
 ```
 
-vfat
-
+#### vfat
 ```bash
 mkfs.vfat test.img
 mvcopy -s -p -Q -m -i test.img boot efi ::
@@ -336,7 +343,7 @@ Creating a filesystem directly with the files included can be done without mount
 
 ---
 
-# Reproducible image filesystems testing
+# Reproducible filesystems testing
 
 ```bash
 export SOURCE_DATE_EPOCH=0
@@ -369,8 +376,12 @@ https://salsa.debian.org/reproducible-builds/reproducible-website/-/merge_reques
 
 #  Reproducible image filesystems
 
-* Non-reproducible boot partition
-* Grub boot/EFI/Linux entry records timestamps
+* Non-reproducible EFI partition
+
+```bash
+drwx------ 1 root root 32 Aug 29 19:59 EFI
+drwx------ 1 root root 60 Aug 29 19:59 loader
+```
 
 https://github.com/systemd/systemd/pull/34180
 
@@ -392,11 +403,15 @@ The Arch container uid/gids for /srv/ftp are different from a normal install. Th
 
 # Reproducible images (bonus)
 
-* Can build a minimal Fedora image on Arch with at least the boot partition reproducible (locally)
+Almost reproducible Fedora on Arch Linux
+
+???
+
+* Some strange difference in the root partition
 
 ---
 
-# CI
+# Continuous Integration (CI)
 
 * mkosi project provides a GitHub action
 * GitLab CI by default uses a container
@@ -407,9 +422,11 @@ The Arch container uid/gids for /srv/ftp are different from a normal install. Th
 
 # Conclusion
 
-* mkosi is easy to get in
-* more work needed before considering a switch
-* more reproducible images
+* Easy to port to mkosi
+* Reproducible image
+* Make mkfs.btrfs reproducible(!)
+* ArchISO
+	* ISO support needed in systemd-repart 
 
 ---
 
