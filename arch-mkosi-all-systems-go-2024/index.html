@@ -23,6 +23,16 @@ count: false
 
 ---
 
+# Overview
+
+* $ whoami / definitions
+* porting to mkosi
+* reproducible images
+* ci
+* conclusion
+
+---
+
 # $ whoami
 
 * Arch Linux Developer
@@ -179,11 +189,11 @@ https://lists.reproducible-builds.org/pipermail/rb-general/2024-March/003301.htm
 * Timestamps (SOURCE_DATE_EPOCH)
 * Recorded hostname, version information, kernel used etc.
 * Locale, sorting, build paths
+* Installation scriplets
 
 ???
 
 ---
-
 
 # Reproducible images
 
@@ -309,17 +319,48 @@ mkosi -d arch -p systemd -p linux -p base -p grub \
 * Filesystems are created by systemd-repart
 * Some mkfs programs support creating a filesystem with files
 
+```bash
+mkfs.btrfs --rootdir image-contents test.img
+```
+
+vfat
+
+```bash
+mkfs.vfat test.img
+mvcopy -s -p -Q -m -i test.img boot efi ::
+```
+
 ???
 
 Creating a filesystem directly with the files included can be done without mounting so unprivileged and possibly easier to make reproducible
 
 ---
 
+# Reproducible image filesystems testing
+
+```bash
+export SOURCE_DATE_EPOCH=0
+
+fallocate test1.img
+fallocate test2.img
+
+mkfs.ext4 test1.img
+mkfs.ext4 test2.img
+```
+
+```bash
+diff <(dumpe2fs test1.img) <(dumpe2fs test2.img)
+< Filesystem created:       Tue Sep 17 11:02:05 2024
+---
+> Filesystem created:       Tue Sep 17 11:02:01 2024
+```
+
+---
+
 # Reproducible image filesystems
 
 * vfat/ext4/f2fs/erofs can be made reproducible
-* btrfs needs work
-* xfs needs work
+* btrfs/xfs needs work
 * dosfstools requires an upstream patch
 
 https://salsa.debian.org/reproducible-builds/reproducible-website/-/merge_requests/156
@@ -339,6 +380,12 @@ https://github.com/systemd/systemd/pull/34180
 
 * Build a reproducible image locally
 * Build on GitHub CI irreproducible
+
+---
+
+# Reproducible images (bonus)
+
+* Can build a minimal Fedora image on Arch with at least the boot partition reproducible (locally)
 
 ---
 
