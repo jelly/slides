@@ -357,9 +357,9 @@ mkfs.ext4 test2.img
 
 ```bash
 diff <(dumpe2fs test1.img) <(dumpe2fs test2.img)
-< Filesystem created:       Tue Sep 17 11:02:05 2024
+< Checksum:                 0x25591814
 ---
-> Filesystem created:       Tue Sep 17 11:02:01 2024
+> Checksum:                 0x120c5314
 ```
 
 ---
