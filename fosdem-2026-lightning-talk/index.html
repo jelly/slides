@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sharing your pacman cache over the LAN</title>
+    <meta charset="utf-8">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+  </head>
+  <body>
+    <textarea id="source">
+count: false
+
+<!--
+ * Note use P and C for presentation mode and to duplicate the window and T to reset the timer
+ * https://docs.jonasundderwolf.de/tech-guides/remarkjs/working-with-remarkjs/
+*/
+-->
+
+# Sharing your pacman cache on the LAN
+
+#### Jelle van der Waa [&lt;jelle@archlinux.org&gt;](mailto:jelle@archlinux.org)
+
+---
+
+# CacheServer
+
+* Introduced in pacman 6.1.0
+* Not used for pacman database files
+* Not removed when a package cannot be found (HTTP 404)
+
+---
+
+# Requirements
+
+* An Arch server / container / virtual machine on your LAN
+* A HTTP(S) server
+* systemd timer
+
+---
+
+# HTTP(S) server
+
+```
+python -m http.server -d /var/cache/pacman/pkg/
+```
+
+---
+
+# Client configuration
+
+```
+head -n 1 /etc/pacman.d/mirrorlist
+CacheServer = http://server-ip:port
+```
+
+---
+
+# Timer
+
+```
+# /etc/systemd/system/pacman-cache.timer
+[Unit]
+Description=Daily pacman cache timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+---
+
+# Unit
+
+Requires `pacman-contrib` and `fakeroot`
+
+```
+# /etc/systemd/system/pacman-cache.service
+[Unit]
+Description=pacman cache download service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/checkupdates -d
+```
+
+---
+
+# Pacman go brrrrrrr
+
+```
+[jelle@taco ~]$ sudo pacman -Syuw
+:: Synchronizing package databases...
+ core is up to date
+ extra is up to date
+:: Starting full system upgrade...
+resolving dependencies...
+
+Packages (1) linux-6.18.7.arch1-1
+
+Total Download Size:  142.97 MiB
+
+:: Proceed with download? [Y/n] y
+:: Retrieving packages...
+ linux-6.18.7.arch1-1-x86_64    143.0 MiB   110 MiB/s 00:01 [#################] 100%
+```
+
+---
+
+# Wiki
+
+More detailed examples are available on the wiki!
+
+https://wiki.archlinux.org/title/Package_proxy_cache
+
+---
+
+# Questions
+
+# 
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+        const slideshow = remark.create({
+            ratio: '16:9',
+            countIncrementalSlides: false,
+        });
+    </script>
+  </body>
+</html>
